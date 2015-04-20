@@ -1,0 +1,29 @@
+.page-header
+  %h1
+    Emails sent to
+    = @address.text
+
+- if @address.blacklisted?(current_admin.team)
+  %h2
+    = @address.text
+    is on the blacklist
+  %p
+    - unless @address.blacklist(current_admin.team).caused_by_delivery.subject.blank?
+      Reason:
+      = link_to truncate(@address.blacklist(current_admin.team).caused_by_delivery.postfix_log_lines.first.extended_status, length: 160), @address.blacklist(current_admin.team).caused_by_delivery
+      = time_ago_in_words(@address.blacklist(current_admin.team).caused_by_delivery.postfix_log_lines.first.created_at)
+      ago
+
+  - if policy(@address.blacklist(current_admin.team)).destroy?
+    = button_to "Remove from blacklist", @address.blacklist(current_admin.team), method: :delete, class: "btn btn-danger"
+
+.row
+  .span3
+    %p
+      = link_to from_address_path(@address) do
+        Switch to emails sent
+        %strong from
+        this address
+    = render "main/status_counts_period", deliveries: @address.deliveries_received(current_admin.team), link: false
+
+= render partial: "deliveries/from", locals: {deliveries: @deliveries}

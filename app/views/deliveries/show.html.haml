@@ -1,0 +1,124 @@
+.page-header
+  %h1= @delivery.subject
+
+%p
+  %span{class: label_class(@delivery.status)}
+    = status_name(@delivery.status)
+  - if @delivery.opened?
+    %span.label.label-success Opened
+  - if @delivery.clicked?
+    %span.label.label-success Clicked
+
+%table#email-headers
+  %tr
+    %td.key
+      %strong App
+    %td= link_to @delivery.app_name, @delivery.app
+  %tr
+    %td.key
+      %strong From
+    %td= link_to @delivery.from, from_address_path(@delivery.from_address)
+  %tr
+    %td.key
+      %strong To
+    %td
+      = link_to @delivery.address.text, to_address_path(@delivery.address)
+  %tr
+    %td.key
+      %strong Subject
+    %td= @delivery.subject
+
+  %tr
+    %td.key
+      %strong
+        - if @delivery.sent?
+          Sent
+        - else
+          Created
+    %td
+      = time_ago_in_words(@delivery.created_at)
+      ago (#{@delivery.created_at.to_formatted_s(:long)  })
+  - if @delivery.status == "delivered" || @delivery.status == "soft_bounce" || @delivery.status == "hard_bounce"
+    %tr
+      %td.key
+        %strong
+          = status_name(@delivery.status)
+      %td
+        = link_to "#log", "data-toggle" => "collapse" do
+          = distance_of_time_in_words(@delivery.created_at, @delivery.postfix_log_lines.first.time, include_seconds: true)
+          after being sent
+          %i.fa.fa-plus-square
+        .collapse{id: "log"}
+          = render partial: "postfix_log_lines", locals: {delivery: @delivery}
+  - if @delivery.opened?
+    %tr
+      %td.key
+        %strong
+          - if @delivery.open_events.count == 1
+            Opened
+          - else
+            First opened
+      %td
+        = link_to "#opened", "data-toggle" => "collapse" do
+          = distance_of_time_in_words(@delivery.created_at, @delivery.open_events.first.created_at, include_seconds: true)
+          after being sent
+          %i.fa.fa-plus-square
+        .collapse{id: "opened"}
+          = render partial: "open_events", locals: {delivery: @delivery}
+  - if @delivery.clicked?
+    %tr
+      %td.key
+        %strong
+          - if @delivery.click_events.count == 1
+            Clicked
+          - else
+            First clicked
+      %td
+        = link_to "#clicked", "data-toggle" => "collapse" do
+          = distance_of_time_in_words(@delivery.created_at, @delivery.click_events.first.created_at, include_seconds: true)
+          after being sent
+          %i.fa.fa-plus-square
+        .collapse{id: "clicked"}
+          = render partial: "click_events", locals: {delivery: @delivery}
+
+%hr
+- if @delivery.data.nil?
+  %p
+    %em
+      Full text of email is not available.
+      = link_to "Why?", "#why_help", "data-toggle" => "collapse"
+  %p#why_help.collapse
+    The full text of only the most recent #{Rails.configuration.max_no_emails_to_store} emails for each app are stored. Keeping things around for ever is not good for privacy or disk space. It still gives
+    you room to look at recent emails to figure our any problems if you need to.
+
+- else
+  %ul.nav.nav-pills
+    - if @delivery.html_part && @delivery.text_part
+      %li.active= link_to "HTML", "#html", data: {toggle: "pill"}
+      %li= link_to "Text", "#text", data: {toggle: "pill"}
+    - elsif @delivery.html_part
+      %li.active= link_to "HTML", "#html", data: {toggle: "pill"}
+    - else
+      %li.active= link_to "Text", "#text", data: {toggle: "pill"}
+    %li= link_to "Source", "#source", data: {toggle: "pill"}
+
+  .tab-content
+    - if @delivery.html_part && @delivery.text_part
+      %div.tab-pane.active#html
+        .well= clean_html_email_for_display(@delivery.html_part)
+      %div.tab-pane#text
+        %pre= @delivery.text_part
+    - elsif @delivery.html_part
+      %div.tab-pane.active#html
+        .well= clean_html_email_for_display(@delivery.html_part)
+    - else
+      %div.tab-pane.active#text
+        %pre= @delivery.text_part
+    %div.tab-pane#source
+      %pre= @delivery.data
+
+    %p.muted
+      This shows the original email as sent by you to Cuttlefish
+
+.form-actions
+  = link_to t('.back', default: t("helpers.links.back")), deliveries_path, class: 'btn'

@@ -1,0 +1,31 @@
+.page-header
+  %h1 Teams
+  %p
+    Teams are self-contained groups of administrators who all have access to the same set of apps
+    but can't see apps or emails belonging to other teams.
+    A team most likely corresponds to an organisation.
+
+
+%ul
+  - @teams.each do |team|
+    %li
+      = pluralize(team.admins.size, "administrator")
+      (#{team.admins.map{|a| mail_to h(a.email), h(a.display_name)}.to_sentence.html_safe})
+      %ul
+        - team.apps.each do |app|
+          %li= link_to app.name, app
+  - if current_admin.super_admin?
+    %li
+      Cuttlefish team
+      %ul
+        %li= link_to App.cuttlefish.name, App.cuttlefish
+
+- if policy(:team).invite?
+  %h2 Invite a new team
+
+  = form_for @admin, url: invite_teams_path(@admin), html: {method: :post} do |f|
+    .control-group
+      = f.label :email
+      = f.text_field :email, placeholder: "Email"
+
+    = f.submit "Send an invitation", class: "btn btn-primary"

@@ -1,0 +1,14 @@
+---
+# vars file for cuttlefish-app
+# encrypt this using `ansible-vault encrypt provisioning/roles/cuttlefish-app/vars/main.yml`
+db_password: cuttlefish_db_pass
+private_ssl_key:
+google_analytics_code:
+secret_key_base: cuttlefish_secret_key
+devise_secret_key: cuttlefish_devise_key
+skylight_application:
+skylight_authentication:
+new_relic_license_key:
+new_relic_app_name:
+honeybadger_api_key:
+cuttlefish_hash_salt: some_good_hash

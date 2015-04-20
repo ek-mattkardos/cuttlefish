@@ -1,0 +1,21 @@
+= paginated_section deliveries, renderer: PagerRenderer, previous_label: image_tag("pager/previous.png", size: "13x14"), next_label: image_tag("pager/next.png", size: "13x14"), text: "Email" do
+  %p.count= page_entries_info deliveries, model: "email"
+  %table#deliveries.table.table-striped
+    %tbody(data-provides="rowlink")
+      - deliveries.each do |delivery|
+        %tr
+          %td.description
+            = delivery.from
+            %br
+            = delivery.subject
+          %td.app.hidden-phone= delivery.app.name
+          %td.time-and-labels
+            = link_to delivery, class: "rowlink" do
+              = time_ago_in_words(delivery.created_at)
+              ago
+            %br
+            = delivered_label(delivery.status)
+            - if delivery.opened?
+              %span.label.label-success Opened
+            - if delivery.clicked?
+              %span.label.label-success Clicked

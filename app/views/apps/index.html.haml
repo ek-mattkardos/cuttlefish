@@ -1,0 +1,21 @@
+.page-header
+  %h1 Apps
+
+%p
+  All emails are sent through apps, which represent the application that sends the email.
+  Each App has its own settings and its own smtp authentication settings to contact the
+  Cuttlefish SMTP server.
+
+- if policy(:app).new?
+  %p
+    = link_to "New App", new_app_path, class: "btn btn-primary"
+
+%table.table
+  %thead
+    %tr
+      %th
+        Name
+  %tbody(data-provides="rowlink")
+    - @apps.each do |app|
+      %tr
+        %td= link_to app.name, app

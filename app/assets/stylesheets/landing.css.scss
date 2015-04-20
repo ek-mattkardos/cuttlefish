@@ -1,0 +1,125 @@
+// Place all the styles related to the landing controller here.
+// They will automatically be included in application.css.
+// You can use Sass (SCSS) here: http://sass-lang.com/
+
+body.landing {
+  padding-top: 0px;
+  text-align: center;
+}
+
+#hero {
+  padding-top: 20px;
+  background-color: #E74C3C;
+}
+
+span.cuttlefish {
+  font-family: 'Leckerli One', cursive;
+  margin-right: 5px;
+}
+
+.modal {
+  color: #34495e;
+  p, .help-block {
+    font-size: 0.75em;
+    line-height: 1.5em;
+  }
+  textarea {
+    height: 200px;
+  }
+}
+
+.hero-unit {
+  background-color: #E74C3C;
+  padding-top: 0px;
+  color: white;
+  small {
+    color: white;
+  }
+  h1 {
+    font-size: 40px;
+    font-weight: normal;
+  }
+  .btn {
+    margin-top: 50px;
+  }
+}
+
+#features {
+  img {
+    margin-top: 60px;
+    margin-bottom: 20px;
+  }
+}
+
+.beta {
+  padding-top: 40px;
+  #padding-bottom: 40px;
+}
+
+#screenshots {
+  h2 {
+    padding-top: 40px;
+    padding-bottom: 40px;
+  }
+  // Change the size of the modal to fit the image size we want to show (width 683px)
+  .modal {
+    width: 714px;
+    margin-left: -357px;
+  }
+}
+
+#compare {
+  padding-top: 40px;
+  p {
+    text-align: left;
+  }
+}
+
+#soon {
+  padding-top: 40px;
+  padding-bottom: 40px;
+  li {
+
+  }
+}
+
+#download {
+  padding-bottom: 40px;
+}
+
+// TODO Put the footer styling in a better place
+
+footer {
+  text-align: left;
+  .span6 {
+    margin-top: 20px;
+    margin-bottom: 20px;
+  }
+  background-color: #BDC3C7;
+  color: #ECF0F1;
+  a {
+    color: white;
+    text-decoration: none;
+  }
+}
+
+html,
+ body {
+   height: 100%;
+   /* The html and body elements cannot have any padding or margin. */
+ }
+
+ /* Wrapper for page content to push down footer */
+ #wrap {
+   min-height: 100%;
+   height: auto !important;
+   height: 100%;
+   /* Negative indent footer by it's height */
+   margin: 0 auto -146px;
+ }
+
+ /* Set the fixed height of the footer here */
+ #push,
+ footer {
+   height: 180px;
+ }

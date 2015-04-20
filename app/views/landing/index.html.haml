@@ -1,0 +1,147 @@
+= link_to "https://github.com/mlandauer/cuttlefish" do
+  <img style="position: absolute; top: 0; left: 0; border: 0;" src="https://s3.amazonaws.com/github/ribbons/forkme_left_orange_ff7600.png" alt="Fork me on GitHub">
+
+#hero
+  .container
+    - if @poplus
+      %p
+        Run and maintained by the
+        OpenAustralia Foundation sponsored by Poplus via a mini-grant.
+    %ul.nav.nav-pills
+      %li.active.pull-right= link_to "Sign in", new_admin_session_path
+
+  .hero-unit
+
+    = image_tag "cuttlefish.png", alt: "Welcome to Cuttlefish", width: 200, height: 120
+    - if @poplus
+      %h1
+        Free hosted
+        %span.cuttlefish Cuttlefish
+        for the Poplus and international civic tech community
+      %p
+        Cuttlefish? It's for lovely transactional email.
+        It's easy to use and open source.
+      %p
+        = link_to "Sign up", "#myModal", role: "button", class: "btn btn-primary btn-large", data: {toggle: "modal"}
+
+        #myModal.modal.hide.fade(tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true")
+          .modal-header
+            %button.close(type="button" data-dismiss="modal" aria-hidden="true") ×
+            %h3#myModalLabel Get an invitation
+          .modal-body
+            = semantic_form_for @signup_form, url: request_invitation_path, html: {class: "form-horizontal"} do |f|
+              = f.semantic_errors
+              = f.inputs do
+                = f.input :name, placeholder: "Your name"
+                = f.input :email, placeholder: "Your email address", hint: "This is where you will receive your Cuttlefish invitation"
+                = f.input :organisation_name, placeholder: "Organisation Name", hint: "If you're not part of an official organisation, that's fine too. Simply include something about the people you're working with."
+                = f.input :organisation_url, placeholder: "Organisation URL"
+                = f.input :message, as: :text, placeholder: "Anything else you want to let us know? For instance, how are you planning to use Cuttlefish? Or maybe just say Hello!", input_html: {cols: 10}
+              %p
+                The obvious disclaimer here is please don't use Cuttlefish to send anything
+                that could be mistaken as spam. No unsolicited emails. No mass
+                marketing emails. Only things related to civic technology. If you
+                have any doubts or questions just ask.
+              = f.actions do
+                = f.action :submit, label: "Send"
+    - else
+      %h1
+        %span.cuttlefish
+          Cuttlefish
+          %small Lovely Transactional Email
+      %p
+        Easy to set up, easy to use and open source
+      %p
+        = link_to "https://github.com/mlandauer/cuttlefish", class: "btn btn-primary btn-large" do
+          %i.fa.fa-download
+          Download
+
+
+.container
+  #features
+    .row
+      .span4
+        = image_tag "illustrations/mail.png", size: "75x75"
+        %h3 Ensure delivery
+        %p Make sure your emails arrive at their destinations. Keeps your email reputation high by automatically holding back emails to destinations that have previously bounced.
+      .span4
+        = image_tag "illustrations/map.png", size: "75x75"
+        %h3 Real time analytics
+        %p Monitor in real time which emails arrive at their destination and which bounce. Track which emails are opened and which links are clicked. And all of this split out by which of your applications sends the emails.
+      .span4
+        = image_tag "illustrations/gift.png", size: "75x75"
+        %h3 Easy to use
+        %p Send email from your application using smtp in the usual way and get all sorts of added benefits for no effort. A lovely web UI to browse what's happening.
+    .row
+      .span4
+        %h3 Flexible
+        %p Works with any web framework and language
+      .span4
+        %h3 Reliable
+        %p Under the hood #{link_to "Postfix", "http://www.postfix.org/"}, which you know and trust, handles email delivery.
+      .span4
+        %h3 Open source
+        %p Take control of your destiny. Use Cuttlefish's advanced features without fear of vendor lock in.
+
+  #screenshots
+    %h2 Check out the UI
+    .row
+      .span4
+        = link_to "#modal1", class: "thumbnail", data: {toggle: "modal"} do
+          = image_tag "screenshots/1.png"
+      .span4
+        = link_to "#modal3", class: "thumbnail", data: {toggle: "modal"} do
+          = image_tag "screenshots/3.png"
+      .span4
+        = link_to "#modal2", class: "thumbnail", data: {toggle: "modal"} do
+          = image_tag "screenshots/2.png"
+
+    #modal1.modal.hide.fade(tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true")
+      .modal-body= image_tag "screenshots/1.png"
+    #modal2.modal.hide.fade(tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true")
+      .modal-body= image_tag "screenshots/2.png"
+    #modal3.modal.hide.fade(tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true")
+      .modal-body= image_tag "screenshots/3.png"
+
+  #compare
+    %h2 How does this compare to...?
+
+    %p
+      There are loads of great proprietary transactional email services out there. If you're happy spending
+      the money then take a look at #{link_to "Sendgrid", "http://sendgrid.com/"},
+      #{link_to "Mailgun", "http://www.mailgun.com/"} and #{link_to "Mandrill", "http://mandrill.com/"}.
+      These are just a few of them..
+
+    %p
+      It's still early days for Cuttlefish and even now it already does a chunk of the most important things
+      the proprietary services do. Cuttlefish offers basic bounce email handling, ensuring you maintain your
+      good mail reputation by not resending to bounced addresses. Cuttlefish also gives you insight on how
+      people read and respond to your emails via automatic open and click tracking.
+
+    %p
+      Of course there is a lot that Cuttlefish doesn't yet do that the proprietary services do.
+      It doesn't yet have an API or web callbacks for registering failed email deliveries to your app; It
+      can't detect when a user marks one of your emails as spam; It doesn't have built in support for email
+      templates.
+
+  .beta
+    %h2 Beta but battle hardened
+    %p
+      Cuttlefish is in <em>beta</em>. It's been used in production on
+      three
+      of
+      #{link_to "OpenAustralia Foundation", "http://www.openaustraliafoundation.org.au"}'s project for over a year
+      and has sent well over 2 million emails.
+
+  #soon
+    %h2 And coming soon!
+
+    %ul.unstyled
+      %li REST API for deep integration with your application
+      %li Web callbacks on succesful delivery, hard bounces, open and click events
+      %li "out of office" and bounce reply filtering
+      %li Incoming email
+  #download
+    = link_to "https://github.com/mlandauer/cuttlefish", class: "btn btn-primary btn-large" do
+      %i.fa.fa-download
+      Download

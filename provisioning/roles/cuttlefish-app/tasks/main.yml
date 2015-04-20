@@ -1,0 +1,51 @@
+---
+- name: Ensure that deploy owns /srv/www
+  file: owner=deploy group=deploy path=/srv/www state=directory
+
+- name: Ensure that /srv/www/shared exists
+  file: path=/srv/www/shared owner=deploy group=deploy state=directory
+
+- name: Ensure git is installed
+  apt: pkg=git
+
+- name: Install bits for compiling mysql clients against
+  apt: pkg=libmysqlclient-dev
+
+- name: Ensure that .env exists
+  template: src=env dest=/srv/www/shared/.env owner=deploy group=deploy
+  notify: nginx restart
+
+- name: Generate the overall nginx config
+  template: src=nginx.conf dest=/etc/nginx/nginx.conf
+  notify: nginx reload
+
+- name: Generate the nginx config for the app
+  template: src=default dest=/etc/nginx/sites-available/ owner=root group=root mode=644
+  notify: nginx reload
+
+- name: Create cuttlefish postgresql database
+  postgresql_db: name=cuttlefish
+
+- name: Create cuttlefish posgresql role
+  postgresql_user: db=cuttlefish name=cuttlefish password={{ db_password }}
+
+- name: Copy over database configuration for application
+  template: src=database.yml dest=/srv/www/shared/database.yml owner=deploy group=deploy
+  notify: nginx restart
+
+- name: Allow deploy user to export foreman script
+  lineinfile: "dest=/etc/sudoers state=present line='deploy ALL=(ALL) NOPASSWD: /usr/local/lib/rvm/wrappers/default/bundle exec foreman export upstart /etc/init -a cuttlefish -u deploy -l /srv/www/shared/log -f Procfile.production' validate='visudo -cf %s'"
+
+- name: Allow deploy user to restart cuttlefish service
+  lineinfile: "dest=/etc/sudoers state=present line='deploy ALL=(ALL) NOPASSWD: /usr/sbin/service cuttlefish restart' validate='visudo -cf %s'"
+
+- name: Allow deploy to read some log files (different from admin group) and ssl private keys
+  user: name=deploy groups=adm,ssl-cert append=yes
+
+- name: Add SSL certificate
+  copy: src=ssl-unified.crt dest=/etc/ssl/cuttlefish.oaf.org.au.pem owner=root group=root mode=0644
+  notify: nginx reload
+
+- name: Add private SSL key
+  copy: content="{{ private_ssl_key }}" dest=/etc/ssl/private/cuttlefish.oaf.org.au.key owner=root group=ssl-cert mode=0640
+  notify: nginx reload

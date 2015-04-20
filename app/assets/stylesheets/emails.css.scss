@@ -1,0 +1,36 @@
+// Place all the styles related to the Emails controller here.
+// They will automatically be included in application.css.
+// You can use Sass (SCSS) here: http://sass-lang.com/
+
+table td {
+  vertical-align: top;
+  ul {
+    list-style-type: none;
+    margin-left: 0;
+  }
+}
+
+.pagination, .pager {
+  display: inline-block;
+  float: right;
+  margin-top: 0;
+}
+
+p.count {
+  margin-top: 20px;
+}
+
+span.label a {
+  text-decoration: none;
+  color: white;
+}
+
+ul.nav.nav-pills a {
+  text-decoration: none;
+}
+
+table#email-headers .key {
+  width: 85px;
+  text-align: right;
+  padding-right: 15px;
+}
